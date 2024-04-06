@@ -12,14 +12,14 @@ RUN ./rclone version
 # Begin final image
 FROM alpine:latest
 
-RUN apk --no-cache add ca-certificates fuse3 tzdata && \
+RUN apk --no-cache add ca-certificates fuse3 tzdata bash && \
   echo "user_allow_other" >> /etc/fuse.conf
 
 COPY --from=builder /go/src/github.com/rclone/rclone/rclone /usr/local/bin/
 
 RUN addgroup -g 1009 rclone && adduser -u 1009 -Ds /bin/sh -G rclone rclone
 
-ENTRYPOINT [ "rclone" ]
+ENTRYPOINT [ "/bin/bash" ]
 
 WORKDIR /data
 ENV XDG_CONFIG_HOME=/config
